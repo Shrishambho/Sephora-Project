@@ -1,0 +1,9 @@
+package com.sephora.service;
+
+import com.sephora.exception.CustomerException;
+import com.sephora.model.Address;
+
+public interface AddressService  {
+
+	public Address addAddress(Address address,Integer customerId) throws CustomerException;
+}

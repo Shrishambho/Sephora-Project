@@ -1,0 +1,45 @@
+package com.sephora.service;
+
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.sephora.exception.CustomerException;
+import com.sephora.model.Address;
+import com.sephora.model.Customer;
+import com.sephora.repository.CustomerRepository;
+
+@Service
+public class AddressServiceImpl implements AddressService {
+
+	@Autowired
+	private CustomerRepository customerRepository;
+	
+	@Autowired
+	private Addressrepository addressRepository;
+	
+	
+	@Override
+	public Address addAddress(Address address,Integer customerId) throws CustomerException {
+		
+		Optional<Customer> customer = customerRepository.findById(customerId);
+		
+		if(customer.isEmpty()) {
+			throw new CustomerException("Customer with given id is not present");
+		}
+		else {
+			
+			Customer cst = customer.get();
+			
+			cst.getAddresses().add(address);
+			address.setCustomer(cst);
+			
+			Address savedAddress = 
+		}
+		
+		
+		return null;
+	}
+
+}

@@ -1,0 +1,128 @@
+package com.sephora.service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.sephora.exception.CustomerException;
+import com.sephora.exception.OrdersException;
+import com.sephora.exception.ProductException;
+import com.sephora.model.Customer;
+import com.sephora.model.Orders;
+import com.sephora.model.OrdersData;
+import com.sephora.model.Product;
+import com.sephora.repository.CustomerRepository;
+import com.sephora.repository.OrdersRepository;
+import com.sephora.repository.ProductRepository;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Service
+@Slf4j
+public class OrdersServiceImple implements OrdersService {
+
+	@Autowired
+	private CustomerRepository customerRepository;
+	
+	@Autowired
+	private OrdersRepository ordersrepository;
+	
+	@Autowired
+	private  ProductRepository productRepository;
+	
+	@Override
+	public Orders placeOrder(OrdersData ordersData, Integer customerId)throws CustomerException,OrdersException,ProductException {
+		
+		log.info("Inside placeOrder method of OrdersServiceImple");
+		Optional<Customer> opt = customerRepository.findById(customerId);
+		
+		if(opt.isEmpty()) {
+			log.error("Throwing exception from placeOrder method of OrdersServiceImple.");
+			throw new CustomerException("Customer with given id is not present");
+		}
+		if(ordersData.getList().size()==0) {
+			
+			log.error("Throwing exception from placeOrder method of OrdersServiceImple.");
+			throw new OrdersException("No product present in list");
+		}
+		
+		Customer customer = opt.get();
+		
+		Orders ord = new Orders();
+		
+		ord.setDate(ordersData.getDate());
+		
+		List<Product> productList = new ArrayList<>();
+		for(Integer x:ordersData.getList()) {
+			
+			Optional<Product> opt1 = productRepository.findById(x);
+			if(opt1.isEmpty()) {
+				throw new ProductException("No product present with provided id, Please check product Id.");
+			}
+			
+			Product product = opt1.get();
+			
+			productList.add(product);
+		}
+		
+		ord.setProducts(productList);
+		
+		ord.setCustomer(customer);
+		 
+		Orders savedOrder = ordersrepository.save(ord);
+		
+		customer.getOrders().add(savedOrder);
+		
+		customerRepository.save(customer);
+		
+		log.debug("Returning Orders object from placeOrder method of OrdersServiceImple.");
+		return savedOrder;
+	}
+
+	@Override
+	public List<Orders> getAllOrders() {
+		log.info("Inside getAllOrders method of OrdersServiceImple");
+		List<Orders> ord = ordersrepository.findAll();
+		
+		log.debug("Returning list of Orders from getAllOrders method of OrdersServiceImple.");
+		return ord;
+	}
+
+	@Override
+	public Orders findbyOrderId(Integer orderId) throws OrdersException {
+		
+		Optional<Orders> opt = ordersrepository.findById(orderId);
+		
+		if(opt.isPresent()) {
+			
+			Orders orders = opt.get();
+			
+			return orders;
+		}
+		else {
+			throw new OrdersException("No order is present with given order Id");
+		}
+		
+	}
+
+	@Override
+	public List<Orders> getOrderByCustomerId(Integer customerId) throws CustomerException {
+		
+		Optional<Customer> opt = customerRepository.findById(customerId);
+		if(opt.isEmpty()) {
+			throw new CustomerException("Customer with given id is not present");
+		}
+		else {
+			List<Orders> list = ordersrepository.findByCustomerCustomerId(customerId);
+			
+			return list;
+		}
+		
+	}
+
+	
+
+}

@@ -1,0 +1,70 @@
+package com.sephora.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.sephora.model.Cart;
+import com.sephora.service.CartService;
+
+@RestController
+public class CartController {
+
+	@Autowired
+	private CartService cartService;
+	
+	@PatchMapping("/cart/{cartId}/{productId}")
+	public ResponseEntity<Cart> addProductToCart(@PathVariable Integer productId,@PathVariable Integer cartId){
+		
+		Cart cart = cartService.addProductToCart(productId,cartId);
+		
+		return new ResponseEntity<>(cart,HttpStatus.ACCEPTED);
+	}
+	
+	@GetMapping("/cart/{cartId}")
+	public ResponseEntity<Cart> getCartById(@PathVariable Integer cartId){
+		
+		Cart cart = cartService.getCartById(cartId);
+		
+		return new ResponseEntity<>(cart,HttpStatus.ACCEPTED);
+		
+	}
+	
+	@GetMapping("/cart")
+	public ResponseEntity<List<Cart>> getAllCarts(){
+		
+		List<Cart> list = cartService.getAllCarts();
+		
+		return new ResponseEntity<>(list,HttpStatus.ACCEPTED);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+}

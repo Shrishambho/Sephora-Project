@@ -1,0 +1,28 @@
+package com.sephora.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.sephora.exception.CustomerException;
+import com.sephora.model.Customer;
+import com.sephora.repository.CustomerRepository;
+
+@Service
+public class CustomerServiceImpl implements CustomerService {
+
+	@Autowired
+	private CustomerRepository cRepository;
+	
+	@Override
+	public Customer saveCustomer(Customer customer) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Customer getCustomerDetailsByEmail(String email)throws CustomerException {
+		
+		return cRepository.findByEmail(email).orElseThrow(() -> new CustomerException("Customer Not found with Email: "+email));
+	}
+
+}

@@ -1,0 +1,52 @@
+package com.sephora.service;
+
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.sephora.exception.CustomerException;
+import com.sephora.exception.OrdersException;
+import com.sephora.model.Customer;
+import com.sephora.model.Orders;
+import com.sephora.model.OrdersData;
+import com.sephora.repository.CustomerRepository;
+import com.sephora.repository.OrdersRepository;
+import com.sephora.repository.ProductRepository;
+
+@Service
+public class OrdersServiceImple implements OrdersService {
+
+	@Autowired
+	private CustomerRepository customerRepository;
+	
+	@Autowired
+	private OrdersRepository ordersrepository;
+	
+	@Autowired
+	private  ProductRepository productRepository;
+	
+	@Override
+	public Orders placeOrder(OrdersData ordersData, Integer customerId)throws CustomerException,OrdersException {
+		
+		Optional<Customer> opt = customerRepository.findById(customerId);
+		if(opt.isEmpty()) {
+			throw new CustomerException("Customer with given id is not present");
+		}
+		if(ordersData.getList().size()==0) {
+			throw new OrdersException("No product present in list");
+		}
+		
+		Customer customer = opt.get();
+		
+		Orders ord = new Orders();
+		
+		ord.setDate(ordersData.getDate());
+		
+		
+		
+		
+		return null;
+	}
+
+}

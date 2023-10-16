@@ -1,0 +1,5 @@
+package com.sephora.exception;
+
+public class ProductException {
+
+}

@@ -1,0 +1,54 @@
+package com.sephora.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.sephora.model.Orders;
+import com.sephora.model.OrdersData;
+import com.sephora.service.OrdersService;
+
+@RestController
+public class OrdersController {
+
+	@Autowired
+	private OrdersService ordersService;
+	
+	@PostMapping("/orders/{customerId}")
+	public ResponseEntity<Orders> placeOrder(@RequestBody  OrdersData ordersData,@PathVariable Integer customerId){
+		
+		Orders ord = ordersService.placeOrder(ordersData, customerId);
+		
+		return new ResponseEntity<>(ord,HttpStatus.CREATED);
+	}
+	
+	@GetMapping("/orders")
+	public ResponseEntity<List<Orders>> getAllOrders(){
+		
+		List<Orders> orders = ordersService.getAllOrders();
+		
+		return new ResponseEntity<>(orders,HttpStatus.CREATED);
+	}
+	
+	@GetMapping("/orders/{orderId}")
+	public ResponseEntity<Orders> getOrderById(@PathVariable Integer orderId){
+		
+		Orders orders = ordersService.findbyOrderId(orderId);
+		
+		return new ResponseEntity<>(orders,HttpStatus.ACCEPTED);
+	}
+	
+	@GetMapping("/orders/customer/{customerId}")
+	public ResponseEntity<List<Orders>> getOrderByCustomerId(@PathVariable Integer customerId){
+		
+		List<Orders> orderList = ordersService.getOrderByCustomerId(customerId);
+		return new ResponseEntity<>(orders,HttpStatus.ACCEPTED);
+	}
+}

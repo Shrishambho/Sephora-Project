@@ -1,0 +1,21 @@
+package com.sephora.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.sephora.model.Cart;
+import com.sephora.repository.CartRepository;
+
+@Service
+public class CartServiceImpl implements CartService {
+
+	@Autowired
+	private CartRepository cartRepository; 
+	
+	
+	public void createCart(Cart cart) {
+		
+		cartRepository.save(cart);
+	}
+
+}

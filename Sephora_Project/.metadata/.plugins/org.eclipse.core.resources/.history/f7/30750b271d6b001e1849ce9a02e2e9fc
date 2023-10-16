@@ -1,0 +1,107 @@
+package com.sephora.service;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+
+import com.sephora.exception.ProductException;
+import com.sephora.model.Product;
+import com.sephora.repository.ProductRepository;
+
+@Service
+public class ProductServiceImpl implements ProductService {
+
+	@Autowired
+	private ProductRepository productRepository;
+	
+	@Override
+	public Product addProduct(Product product) {
+		
+		Product savedProduct = productRepository.save(product);
+		
+		return savedProduct;
+	}
+
+	@Override
+	public Product updateProductPrice(Integer productId, double price) throws ProductException {
+		
+		if(price<=0) {
+			throw new ProductException("Product price can not be less than or equal to zero.");
+		}
+		Optional<Product> product = productRepository.findById(productId);
+		
+		if(product.isPresent()) {
+			Product pro= product.get();
+			
+			pro.setPrice(price);
+			
+			Product updatedProduct = productRepository.save(pro);
+			return updatedProduct;
+			
+		}
+		else {
+			throw new ProductException("Product with given id is not present.");
+		}
+		
+	}
+
+	@Override
+	public Product updateProductQuantity(Integer productId, Integer quantity) throws ProductException {
+		if(quantity<0) {
+			throw new ProductException("Product quantity can not be less than zero.");
+		}
+		Optional<Product> product = productRepository.findById(productId);
+		
+		if(product.isPresent()) {
+			Product pro= product.get();
+			
+			pro.setQuantity(quantity);
+			
+			
+			Product updatedProduct = productRepository.save(pro);
+			return updatedProduct;
+			
+		}
+		else {
+			throw new ProductException("Product with given id is not present.");
+		}
+	}
+
+	@Override
+	public String deleteProduct(Integer productId) throws ProductException {
+		Optional<Product> product = productRepository.findById(productId);
+		
+		if(product.isPresent()) {
+			productRepository.delete(product.get());
+			return "Product deleted Successfully.";
+		}
+		else {
+			throw new ProductException("Product with given id is not present.");
+		}
+		
+	}
+
+	@Override
+	public List<Product> getAllProducts() {
+		
+		List<Product> productList = productRepository.findAll();
+		
+		return productList;
+	}
+
+	@Override
+	public List<Product> getProdctPageWise(Integer pageNumber, Integer size) {
+		
+		Pageable pageable = PageRequest.of(pageNumber-1, size,Sort.by("price").ascending());
+		
+		List<Product> list = productRepository.findAll(pageable);
+		
+		return list;
+	}
+
+}

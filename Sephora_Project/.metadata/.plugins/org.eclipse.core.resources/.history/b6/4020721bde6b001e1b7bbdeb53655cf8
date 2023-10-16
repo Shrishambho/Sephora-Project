@@ -1,0 +1,63 @@
+package com.sephora.service;
+
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.sephora.exception.CustomerException;
+import com.sephora.model.Customer;
+import com.sephora.repository.CustomerRepository;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Service
+@Slf4j
+public class CustomerServiceImpl implements CustomerService {
+
+	@Autowired
+	private CustomerRepository cRepository;
+	
+	@Override
+	public Customer saveCustomer(Customer customer) {
+		log.info("customer added successfully");
+		return cRepository.save(customer);
+		
+	}
+
+	@Override
+	public Customer getCustomerDetailsByEmail(String email)throws CustomerException {
+		
+		return cRepository.findByEmail(email).orElseThrow(() -> new CustomerException("Customer Not found with Email: "+email));
+	}
+
+	@Override
+	public List<Customer> getAllCustomer() {
+		
+		List<Customer> list = cRepository.findAll();
+		
+		return list;
+	}
+
+	@Override
+	public String deleteCustomer(Integer Customerid) throws CustomerException {
+	
+		Optional<Customer> cust = cRepository.findById(Customerid);
+		
+		if(cust.isPresent()) {
+			Customer customer = cust.get();
+			
+			cRepository.delete(customer);
+			
+			return "Customer deleted Successfully";
+		}
+		else {
+			throw new CustomerException("Customer with given id not present");
+		}
+		
+	}
+
+}

@@ -1,0 +1,8 @@
+package com.sephora.service;
+
+import com.sephora.model.Product;
+
+public interface ProductService {
+
+	public Product addProduct(Product product);
+}

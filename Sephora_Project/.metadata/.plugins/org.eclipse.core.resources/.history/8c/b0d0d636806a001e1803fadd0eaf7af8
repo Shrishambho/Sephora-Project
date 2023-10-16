@@ -1,0 +1,5 @@
+package com.sephora.controller;
+
+public class UserController {
+
+}

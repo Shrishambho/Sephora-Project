@@ -1,0 +1,8 @@
+package com.sephora.service;
+
+import com.sephora.model.Cart;
+
+public interface CartService {
+
+	public void createCart(Cart cart);
+}

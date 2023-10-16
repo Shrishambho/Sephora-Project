@@ -1,0 +1,112 @@
+package com.sephora.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.sephora.model.Product;
+import com.sephora.service.ProductService;
+
+import jakarta.validation.Valid;
+
+@RestController
+public class ProductController {
+
+	@Autowired
+	private ProductService productService;
+	
+	//Add product
+	@PostMapping("/product")
+	public ResponseEntity<Product> addProduct(@RequestBody @Valid Product product){
+		
+		Product savedProduct = productService.addProduct(product);
+		
+		return new ResponseEntity<>(savedProduct,HttpStatus.ACCEPTED);
+	}
+	
+	
+	//Update price.
+	@PatchMapping("/productPrice/{productId}/{price}")
+	public ResponseEntity<Product> updateProduct(@PathVariable Integer productId,@PathVariable double price ){
+		
+		Product product = productService.updateProductPrice(productId, price);
+		
+		return new ResponseEntity<>(product,HttpStatus.ACCEPTED);
+	}
+	
+	//Update quantity
+	@PatchMapping("/productQuantity/{productId}/{quantity}")
+	public ResponseEntity<Product> updateQuantity(@PathVariable Integer productId,@PathVariable Integer quantity ){
+		
+		Product product = productService.updateProductQuantity(productId, quantity);
+		
+		return new ResponseEntity<>(product,HttpStatus.ACCEPTED);
+	}
+	
+	
+	//Delete product
+	@DeleteMapping("/product/{productId}")
+	public ResponseEntity<String> deleteProduct(@PathVariable Integer productId){
+		
+		String result = productService.deleteProduct(productId );
+		
+		return new ResponseEntity<>(result,HttpStatus.ACCEPTED);
+	}
+	
+	
+	//Get All Product
+	
+	@GetMapping("/product")
+	public ResponseEntity<List<Product>> getAllProducts(){
+		
+		List<Product> listOfProducts = productService.getAllProducts();
+		
+		return new ResponseEntity<>(listOfProducts,HttpStatus.ACCEPTED);
+	}
+	
+	
+	//Get product page wise.
+	
+	@GetMapping("/product/{pageNumber}/{size}")
+	public ResponseEntity<List<Product>> getProductPageWise(@PathVariable Integer pageNumber,Integer size ){
+		
+		List<Product> list = productService.getProdctPageWise(pageNumber, size);
+		
+		return new ResponseEntity<>(list,HttpStatus.ACCEPTED);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+}

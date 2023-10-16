@@ -1,0 +1,11 @@
+package com.sephora.service;
+
+import com.sephora.exception.CartException;
+import com.sephora.model.Cart;
+
+public interface CartService {
+
+	public void createCart(Cart cart);
+	
+	public Cart addProductToCart(Integer productId) throws CartException;
+}

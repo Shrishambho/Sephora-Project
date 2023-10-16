@@ -1,0 +1,38 @@
+package com.sephora.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.sephora.model.Address;
+import com.sephora.service.AddressService;
+
+import jakarta.validation.Valid;
+
+@RestController
+public class AddressController {
+
+	@Autowired
+	private AddressService addressService;
+	
+	@PostMapping("/address/{customerId}")
+	public ResponseEntity<Address> addAddress(@RequestBody @Valid Address address,@PathVariable Integer customerId){
+		
+		Address savedAddress = addressService.addAddress(address, customerId);
+		
+		return new ResponseEntity<>(savedAddress,HttpStatus.CREATED);
+	}
+	
+	@GetMapping("/address/{addressId}")
+     public ResponseEntity<Address> getAddressById(@PathVariable Integer addressId){
+		
+		Address savedAddress = addressService.getAddressByAddressId(addressId);
+		
+		return new ResponseEntity<>(savedAddress,HttpStatus.CREATED);
+	}
+}

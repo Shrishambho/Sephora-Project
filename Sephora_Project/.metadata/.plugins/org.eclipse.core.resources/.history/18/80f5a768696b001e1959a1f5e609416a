@@ -1,0 +1,10 @@
+package com.sephora.service;
+
+import com.sephora.model.Orders;
+import com.sephora.model.OrdersData;
+
+public interface OrdersService {
+
+	
+	public Orders placeOrder(OrdersData ordersData,Integer customerId)throws Customerexception;
+}
